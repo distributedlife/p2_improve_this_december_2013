@@ -10,7 +10,7 @@ public:
 		m_fShader(fShader),
 		m_indicies(indicies)
 	{};
-	const bool isMatch (const BatchableObject* object, const bool checkOnly);
+	bool isMatch (const BatchableObject* object, const bool checkOnly);
 
 protected:
 	const unsigned long m_format;
@@ -22,7 +22,7 @@ protected:
 	TextureManager::Atlas* m_textureUnit[4];
 };
 
-const bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnly) 
+bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnly) 
 {
 	if (!object) 
 	{
