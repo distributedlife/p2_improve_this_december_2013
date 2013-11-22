@@ -24,9 +24,12 @@ public:
 
 class SupportedTexture {
 public:
-	SupportedTexture (const unsigned int textureID, unsigned int width, unsigned int height) {};
-	unsigned int getTextureID() {return 0;};
-	void incrementTextureUsage() {};
+	SupportedTexture (const unsigned int textureID, unsigned int width, unsigned int height) : m_textureID (textureID) {};
+	virtual unsigned int getTextureID() { return m_textureID; };
+	virtual void incrementTextureUsage() {};
+
+protected:
+	const unsigned int m_textureID ;
 };
 
 class BatchableObject {

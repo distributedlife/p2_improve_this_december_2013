@@ -2,6 +2,17 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+class BatchCatalogueWithStubTexture : public BatchCatalogue {
+public:
+	inline BatchCatalogueWithStubTexture(const unsigned long format, const bool isStatic, const ShaderObject* vShader, const ShaderObject* fShader, const bool indicies) : 
+		BatchCatalogue(format, isStatic, vShader, fShader, indicies)
+	{};
+
+	void addSupportedTexture(SupportedTexture* texture) {
+		m_textures.push_back(texture);
+	}
+};
+
 class MockBatchableObject : public BatchableObject {
 public:
 	MOCK_CONST_METHOD0(getDataFormat, unsigned long());
@@ -86,7 +97,7 @@ TEST(BatchCatalogue, IsNotAMatchWhenCheckOnlyAndWhenBatchableObjectHasIndiciesDo
 	EXPECT_FALSE(catalogue->isMatch(&batchableObject, true));
 };
 
-TEST(BatchCatalogue, IsNotAMatchWhenCheckOnlyAndWhenBatchableObjectMeetsTheCriteria) {
+TEST(BatchCatalogue, IsAMatchWhenCheckOnlyAndWhenBatchableObjectMeetsTheCriteria) {
 	BatchCatalogue* catalogue = new BatchCatalogue(0, false, NULL, NULL, false);
 	
 	MockBatchableObject batchableObject;
@@ -98,6 +109,38 @@ TEST(BatchCatalogue, IsNotAMatchWhenCheckOnlyAndWhenBatchableObjectMeetsTheCrite
 	
 	EXPECT_TRUE(catalogue->isMatch(&batchableObject, true));
 };
+
+TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsInTheCatalogue) {
+	BatchCatalogueWithStubTexture* catalogue = new BatchCatalogueWithStubTexture(0, false, NULL, NULL, false);
+	catalogue->addSupportedTexture(new SupportedTexture(1, 0, 0));
+
+	MockBatchableObject batchableObject;
+	ON_CALL(batchableObject, getDataFormat()).WillByDefault(Return(0));
+	ON_CALL(batchableObject, isStatic()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getVertexShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, getFragmentShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, hasIndicies()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getTextureID(0)).WillByDefault(Return(1));
+	
+	EXPECT_TRUE(catalogue->isMatch(&batchableObject, false));
+}
+
+TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsAnywhereInTheCatalogue) {
+	BatchCatalogueWithStubTexture* catalogue = new BatchCatalogueWithStubTexture(0, false, NULL, NULL, false);
+	catalogue->addSupportedTexture(new SupportedTexture(1, 0, 0));
+	catalogue->addSupportedTexture(new SupportedTexture(2, 0, 0));
+	catalogue->addSupportedTexture(new SupportedTexture(3, 0, 0));
+
+	MockBatchableObject batchableObject;
+	ON_CALL(batchableObject, getDataFormat()).WillByDefault(Return(0));
+	ON_CALL(batchableObject, isStatic()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getVertexShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, getFragmentShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, hasIndicies()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getTextureID(0)).WillByDefault(Return(2));
+	
+	EXPECT_TRUE(catalogue->isMatch(&batchableObject, false));
+}
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleMock(&argc, argv);
