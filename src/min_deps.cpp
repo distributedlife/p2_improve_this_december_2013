@@ -31,10 +31,12 @@ public:
 
 class BatchableObject {
 public:
-	unsigned long getDataFormat() const { return 0; };
-	bool isStatic() const {return false;};
-	const ShaderObject* getVertexShader() const {return NULL;};
-	const ShaderObject* getFragmentShader() const {return NULL;};
-	unsigned int hasIndicies() const { return false;};
-	unsigned int getTextureID(int textureNumber) const {return 0;};
+	// virtual ~BatchableObject();
+
+	virtual unsigned long getDataFormat() const = 0;
+	virtual bool isStatic() const = 0;
+	virtual const ShaderObject* getVertexShader() const = 0;
+	virtual const ShaderObject* getFragmentShader() const = 0;
+	virtual bool hasIndicies() const = 0;
+	virtual unsigned int getTextureID(int textureNumber) const = 0;
 };

@@ -91,7 +91,6 @@ const bool BatchCatalogue::isMatch (const BatchableObject* object, const bool ch
 
 		// _debug ("add our texture to our batch-catalogue support list");
 		SupportedTexture* texture = new SupportedTexture (object->getTextureID (0), TextureManager::getTextureWidth (object->getTextureID (0)), TextureManager::getTextureHeight (object->getTextureID (0)));
-
 		if (texture) 
 		{
 			m_textures.push_back (texture);

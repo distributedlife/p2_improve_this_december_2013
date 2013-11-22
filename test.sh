@@ -1,0 +1,1 @@
+clear && make clean && make all && gmock_test 
