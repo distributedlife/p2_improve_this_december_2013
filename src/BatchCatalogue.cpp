@@ -66,7 +66,6 @@ bool BatchCatalogue::willFit (const BatchableObject* object)
 	{
 		return true;
 	}
-
 	if (m_textureAtlas[0]) 
 	{
 		return m_textureAtlas[0]->willFit(object->getPrimaryTextureID());
