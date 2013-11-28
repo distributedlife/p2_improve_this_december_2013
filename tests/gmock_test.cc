@@ -8,11 +8,11 @@ public:
 		BatchCatalogue(format, isStatic, vShader, fShader, indicies)
 	{};
 
-	void addSupportedTexture(SupportedTexture* texture) {
-		m_textures.push_back(texture);
+	void addSupportedTexture(unsigned int textureId) {
+		m_textures.push_back(textureId);
 	}
 
-	std::vector<SupportedTexture*> getTextures() {
+	std::vector<unsigned int> getTextures() {
 		return m_textures;
 	}
 };
@@ -131,8 +131,7 @@ TEST(BatchCatalogue, IsAMatchWhenCheckOnlyAndWhenBatchableObjectMeetsTheCriteria
 
 TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsInTheCatalogue) {
 	BatchCatalogueWithStubTexture catalogue(0, false, NULL, NULL, false);
-	SupportedTexture sp(1);
-	catalogue.addSupportedTexture(&sp);
+	catalogue.addSupportedTexture(1);
 
 	MockBatchableObject batchableObject;
 	EXPECT_CALL(batchableObject, getDataFormat()).WillRepeatedly(Return(0));
@@ -147,12 +146,9 @@ TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaA
 
 TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsAnywhereInTheCatalogue) {
 	BatchCatalogueWithStubTexture catalogue(0, false, NULL, NULL, false);
-	SupportedTexture sp1(1);
-	SupportedTexture sp2(2);
-	SupportedTexture sp3(3);
-	catalogue.addSupportedTexture(&sp1);
-	catalogue.addSupportedTexture(&sp2);
-	catalogue.addSupportedTexture(&sp3);
+	catalogue.addSupportedTexture(1);
+	catalogue.addSupportedTexture(2);
+	catalogue.addSupportedTexture(3);
 
 	MockBatchableObject batchableObject;
 	EXPECT_CALL(batchableObject, getDataFormat()).WillRepeatedly(Return(0));
@@ -192,7 +188,7 @@ TEST(BatchCatalogue, IsAMatch_AddsNewSupportedTexture_WhenNotCheckOnlyAndBatchab
 	
 	EXPECT_TRUE(catalogue.isMatch(&batchableObject, false));
 	EXPECT_EQ(catalogue.getTextures().size(), 1);
-	// EXPECT_EQ(catalogue.getTextures()[0]->getTextureID(), 2);
+	EXPECT_EQ(catalogue.getTextures()[0], 2);
 }
 
 TEST(BatchCatalogue, IsAMatch_WhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsNotInTheCatalogueAndAtlasesAreBeingUsedAndTextureDoesNotFit) {

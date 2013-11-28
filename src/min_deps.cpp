@@ -12,24 +12,11 @@ public:
 
 class TextureManager {
 public:
-	static unsigned int getTextureWidth(unsigned int textureId) { return 0; };
-	static unsigned int getTextureHeight(unsigned int textureId) { return 0; };
-
 	class Atlas {
 	public:
 		virtual bool willFit (const unsigned long textureID) = 0;
 		virtual const AtlasedTexture* addTexture(const unsigned long textureID) = 0;
 	};
-};
-
-class SupportedTexture {
-public:
-	SupportedTexture (const unsigned int textureID) : m_textureID (textureID) {};
-	virtual  ~SupportedTexture() {};
-	virtual unsigned int getTextureID() { return m_textureID; };
-
-protected:
-	const unsigned int m_textureID ;
 };
 
 class BatchableObject {

@@ -23,7 +23,7 @@ protected:
 	const ShaderObject* m_vShader;
 	const ShaderObject* m_fShader;
 	const bool m_indicies;
-	std::vector<SupportedTexture*> m_textures;
+	std::vector<unsigned int> m_textures;
 	TextureManager::Atlas* m_textureUnit[4];
 };
 
@@ -43,10 +43,8 @@ bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnl
 		const size_t numTexures = m_textures.size ();
 		for (size_t i = 0; i < numTexures; i++) 
 		{
-			SupportedTexture* catalogueItemTexture = m_textures[i];
-
 			// _debug ("we only check the first texture slot here, this is by design as batchable geometry only uses the fist texture as a distinguishing one");
-			if (object->getTextureID (0) == catalogueItemTexture->getTextureID ()) 
+			if (object->getTextureID (0) == m_textures[i]) 
 			{
 				return true;
 			}
@@ -89,7 +87,7 @@ bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnl
 		} 
 
 		// _debug ("add our texture to our batch-catalogue support list");
-		m_textures.push_back (new SupportedTexture (object->getTextureID (0)));
+		m_textures.push_back (object->getTextureID (0));
 
 		return true;
 	}
