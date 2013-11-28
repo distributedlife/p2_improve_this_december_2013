@@ -51,12 +51,6 @@ using ::testing::Return;
 using ::testing::ReturnNull;
 using ::testing::Mock;
 
-TEST(BatchCatalogue, IsNotAMatchWhenNullBatchableObjectSupplied) {
-	BatchCatalogue catalogue(0, false, NULL, NULL, false);
-
-	EXPECT_FALSE(catalogue.isMatch(NULL, false));
-}
-
 TEST(BatchCatalogue, IsNotAMatchWhenCheckOnlyAndWhenBatchableObjectFormatDoesNotMatchCatalogue) {
 	BatchCatalogue catalogue(0, false, NULL, NULL, false);
 	

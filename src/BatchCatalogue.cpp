@@ -29,11 +29,6 @@ protected:
 
 bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnly) 
 {
-	if (!object) 
-	{
-		return false;
-	}
-
 	// _debug ("check to see if the geometry and shaders match");
 	if (m_format == object->getDataFormat () && m_static == object->isStatic () && 
 		m_vShader == object->getVertexShader () && m_fShader == object->getFragmentShader () && 
@@ -94,11 +89,7 @@ bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnl
 		} 
 
 		// _debug ("add our texture to our batch-catalogue support list");
-		SupportedTexture* texture = new SupportedTexture (object->getTextureID (0));
-		if (texture) 
-		{
-			m_textures.push_back (texture);
-		}
+		m_textures.push_back (new SupportedTexture (object->getTextureID (0)));
 
 		return true;
 	}
