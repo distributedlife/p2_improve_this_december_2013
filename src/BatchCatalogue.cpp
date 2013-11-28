@@ -9,7 +9,12 @@ public:
 		m_vShader(vShader),
 		m_fShader(fShader),
 		m_indicies(indicies)
-	{};
+	{
+		m_textureUnit[0] = NULL;
+		m_textureUnit[1] = NULL;
+		m_textureUnit[2] = NULL;
+		m_textureUnit[3] = NULL;
+	};
 	bool isMatch (const BatchableObject* object, const bool checkOnly);
 
 protected:

@@ -18,13 +18,14 @@ public:
 	class Atlas {
 	public:
 		virtual bool willFit (const unsigned long textureID) = 0;
-		const AtlasedTexture* addTexture(const unsigned long textureID) { return NULL; };
+		virtual const AtlasedTexture* addTexture(const unsigned long textureID) = 0;
 	};
 };
 
 class SupportedTexture {
 public:
 	SupportedTexture (const unsigned int textureID) : m_textureID (textureID) {};
+	virtual  ~SupportedTexture() {};
 	virtual unsigned int getTextureID() { return m_textureID; };
 	virtual void incrementTextureUsage() {};
 
