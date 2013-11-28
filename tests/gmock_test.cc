@@ -11,6 +11,10 @@ public:
 	void addSupportedTexture(SupportedTexture* texture) {
 		m_textures.push_back(texture);
 	}
+
+	std::vector<SupportedTexture*> getTextures() {
+		return m_textures;
+	}
 };
 
 class MockBatchableObject : public BatchableObject {
@@ -112,7 +116,7 @@ TEST(BatchCatalogue, IsAMatchWhenCheckOnlyAndWhenBatchableObjectMeetsTheCriteria
 
 TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsInTheCatalogue) {
 	BatchCatalogueWithStubTexture* catalogue = new BatchCatalogueWithStubTexture(0, false, NULL, NULL, false);
-	catalogue->addSupportedTexture(new SupportedTexture(1, 0, 0));
+	catalogue->addSupportedTexture(new SupportedTexture(1));
 
 	MockBatchableObject batchableObject;
 	ON_CALL(batchableObject, getDataFormat()).WillByDefault(Return(0));
@@ -127,9 +131,9 @@ TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaA
 
 TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsAnywhereInTheCatalogue) {
 	BatchCatalogueWithStubTexture* catalogue = new BatchCatalogueWithStubTexture(0, false, NULL, NULL, false);
-	catalogue->addSupportedTexture(new SupportedTexture(1, 0, 0));
-	catalogue->addSupportedTexture(new SupportedTexture(2, 0, 0));
-	catalogue->addSupportedTexture(new SupportedTexture(3, 0, 0));
+	catalogue->addSupportedTexture(new SupportedTexture(1));
+	catalogue->addSupportedTexture(new SupportedTexture(2));
+	catalogue->addSupportedTexture(new SupportedTexture(3));
 
 	MockBatchableObject batchableObject;
 	ON_CALL(batchableObject, getDataFormat()).WillByDefault(Return(0));
@@ -140,6 +144,35 @@ TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaA
 	ON_CALL(batchableObject, getTextureID(0)).WillByDefault(Return(2));
 	
 	EXPECT_TRUE(catalogue->isMatch(&batchableObject, false));
+}
+
+TEST(BatchCatalogue, IsAMatchWhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsNotTheCatalogueAndAtlasesAreNotBeingUsed) {
+	BatchCatalogue* catalogue = new BatchCatalogue(0, false, NULL, NULL, false);
+
+	MockBatchableObject batchableObject;
+	ON_CALL(batchableObject, getDataFormat()).WillByDefault(Return(0));
+	ON_CALL(batchableObject, isStatic()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getVertexShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, getFragmentShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, hasIndicies()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getTextureID(0)).WillByDefault(Return(2));
+	
+	EXPECT_TRUE(catalogue->isMatch(&batchableObject, false));
+}
+
+TEST(BatchCatalogue, IsAMatch_AddsNewSupportedTexture_WhenNotCheckOnlyAndBatchableObjectMeetsTheCriteriaAndTextureIsNotInTheCatalogueAndAtlasesAreNotBeingUsed) {
+	BatchCatalogueWithStubTexture* catalogue = new BatchCatalogueWithStubTexture(0, false, NULL, NULL, false);
+
+	MockBatchableObject batchableObject;
+	ON_CALL(batchableObject, getDataFormat()).WillByDefault(Return(0));
+	ON_CALL(batchableObject, isStatic()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getVertexShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, getFragmentShader()).WillByDefault(ReturnNull());
+	ON_CALL(batchableObject, hasIndicies()).WillByDefault(Return(false));
+	ON_CALL(batchableObject, getTextureID(0)).WillByDefault(Return(2));
+	
+	EXPECT_TRUE(catalogue->isMatch(&batchableObject, true));
+	EXPECT_EQ(catalogue->getTextures()[0]->getTextureID(), 2);
 }
 
 int main(int argc, char** argv) {

@@ -17,14 +17,14 @@ public:
 
 	class Atlas {
 	public:
-		bool willFit (const unsigned long textureID) {return false; };
+		virtual bool willFit (const unsigned long textureID) = 0;
 		const AtlasedTexture* addTexture(const unsigned long textureID) { return NULL; };
 	};
 };
 
 class SupportedTexture {
 public:
-	SupportedTexture (const unsigned int textureID, unsigned int width, unsigned int height) : m_textureID (textureID) {};
+	SupportedTexture (const unsigned int textureID) : m_textureID (textureID) {};
 	virtual unsigned int getTextureID() { return m_textureID; };
 	virtual void incrementTextureUsage() {};
 
@@ -34,8 +34,6 @@ protected:
 
 class BatchableObject {
 public:
-	// virtual ~BatchableObject();
-
 	virtual unsigned long getDataFormat() const = 0;
 	virtual bool isStatic() const = 0;
 	virtual const ShaderObject* getVertexShader() const = 0;
