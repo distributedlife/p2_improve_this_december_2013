@@ -53,7 +53,6 @@ bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnl
 			// _debug ("we only check the first texture slot here, this is by design as batchable geometry only uses the fist texture as a distinguishing one");
 			if (object->getTextureID (0) == catalogueItemTexture->getTextureID ()) 
 			{
-				catalogueItemTexture->incrementTextureUsage ();
 				return true;
 			}
 		}

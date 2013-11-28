@@ -27,7 +27,6 @@ public:
 	SupportedTexture (const unsigned int textureID) : m_textureID (textureID) {};
 	virtual  ~SupportedTexture() {};
 	virtual unsigned int getTextureID() { return m_textureID; };
-	virtual void incrementTextureUsage() {};
 
 protected:
 	const unsigned int m_textureID ;
