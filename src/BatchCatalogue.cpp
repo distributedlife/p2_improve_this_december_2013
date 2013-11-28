@@ -11,10 +11,10 @@ public:
 		m_fShader(fShader),
 		m_indicies(indicies)
 	{
-		m_textureUnit[0] = NULL;
-		m_textureUnit[1] = NULL;
-		m_textureUnit[2] = NULL;
-		m_textureUnit[3] = NULL;
+		m_textureAtlas[0] = NULL;
+		m_textureAtlas[1] = NULL;
+		m_textureAtlas[2] = NULL;
+		m_textureAtlas[3] = NULL;
 	};
 	bool isMatch (const BatchableObject* object, const bool checkOnly);
 	bool isEligible (const BatchableObject* object);
@@ -27,8 +27,10 @@ protected:
 	const ShaderObject* m_vShader;
 	const ShaderObject* m_fShader;
 	const bool m_indicies;
-	std::vector<unsigned int> m_textures;
-	TextureManager::Atlas* m_textureUnit[4];
+	std::vector<unsigned int> m_texturesAlreadyInCatalogue;
+	TextureManager::Atlas* m_textureAtlas[4];
+
+	void addToTextureUnit(TextureManager::Atlas* textureUnit, unsigned int textureId);
 };
 
 bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnly) {
@@ -59,13 +61,13 @@ bool BatchCatalogue::isEligible (const BatchableObject* object)
 
 bool BatchCatalogue::willFit (const BatchableObject* object)
 {
-	if(std::find(m_textures.begin(), m_textures.end(), object->getTextureID(0)) != m_textures.end()) {
+	if(std::find(m_texturesAlreadyInCatalogue.begin(), m_texturesAlreadyInCatalogue.end(), object->getTextureID(0)) != m_texturesAlreadyInCatalogue.end()) {
 		return true;
 	}
 
-	if (m_textureUnit[0]) 
+	if (m_textureAtlas[0]) 
 	{
-		if (!m_textureUnit[0]->willFit (object->getTextureID (0))) 
+		if (!m_textureAtlas[0]->willFit (object->getTextureID (0))) 
 		{
 			return false;
 		}
@@ -75,38 +77,34 @@ bool BatchCatalogue::willFit (const BatchableObject* object)
 }
 
 void BatchCatalogue::addToCatalogue (const BatchableObject* object) {
-	if(std::find(m_textures.begin(), m_textures.end(), object->getTextureID(0)) != m_textures.end()) {
+	if(std::find(m_texturesAlreadyInCatalogue.begin(), m_texturesAlreadyInCatalogue.end(), object->getTextureID(0)) != m_texturesAlreadyInCatalogue.end()) {
 		return;
 	}
 
 	if (object->getDataFormat () & BufferedBatch::kFormatUsesTextureUnit0) 
 	{
-		if (m_textureUnit[0]) 
-		{
-			m_textureUnit[0]->addTexture (object->getTextureID (0));
-		}
+		addToTextureUnit(m_textureAtlas[0], object->getTextureID(0));
 	}
 	if (object->getDataFormat () & BufferedBatch::kFormatUsesTextureUnit1) 
 	{
-		if (m_textureUnit[1]) 
-		{
-			m_textureUnit[1]->addTexture (object->getTextureID (1));
-		}
+		addToTextureUnit(m_textureAtlas[1], object->getTextureID(1));
 	}
 	if (object->getDataFormat () & BufferedBatch::kFormatUsesTextureUnit2) 
 	{
-		if (m_textureUnit[2]) 
-		{
-			m_textureUnit[2]->addTexture (object->getTextureID (2));
-		}
+		addToTextureUnit(m_textureAtlas[2], object->getTextureID(2));
 	}
 	if (object->getDataFormat () & BufferedBatch::kFormatUsesTextureUnit3) 
 	{
-		if (m_textureUnit[3]) 
-		{
-			m_textureUnit[3]->addTexture (object->getTextureID (3));
-		}
+		addToTextureUnit(m_textureAtlas[3], object->getTextureID(3));
 	}
 
-	m_textures.push_back (object->getTextureID (0));
+	m_texturesAlreadyInCatalogue.push_back (object->getTextureID (0));
+}
+
+void BatchCatalogue::addToTextureUnit(TextureManager::Atlas* textureUnit, unsigned int textureId)
+{
+	if (textureUnit) 
+	{
+		textureUnit->addTexture(textureId);
+	}
 }

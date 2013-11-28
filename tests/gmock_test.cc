@@ -9,11 +9,11 @@ public:
 	{};
 
 	void addSupportedTexture(unsigned int textureId) {
-		m_textures.push_back(textureId);
+		m_texturesAlreadyInCatalogue.push_back(textureId);
 	}
 
 	std::vector<unsigned int> getTextures() {
-		return m_textures;
+		return m_texturesAlreadyInCatalogue;
 	}
 };
 
@@ -24,10 +24,10 @@ public:
 	: 
 		BatchCatalogue(format, isStatic, vShader, fShader, indicies)
 	{
-		m_textureUnit[0] = atlas0;
-		m_textureUnit[1] = atlas1;
-		m_textureUnit[2] = atlas2;
-		m_textureUnit[3] = atlas3;
+		m_textureAtlas[0] = atlas0;
+		m_textureAtlas[1] = atlas1;
+		m_textureAtlas[2] = atlas2;
+		m_textureAtlas[3] = atlas3;
 	};
 };
 
@@ -332,6 +332,9 @@ TEST(BatchCatalogue, IsAMatch_WhenTextureFitsInAtlasAndAllTextureUnitsUsedWithDa
 	EXPECT_CALL(batchableObject, getFragmentShader()).WillRepeatedly(ReturnNull());
 	EXPECT_CALL(batchableObject, hasIndicies()).WillRepeatedly(Return(false));
 	EXPECT_CALL(batchableObject, getTextureID(0)).WillRepeatedly(Return(2));
+	EXPECT_CALL(batchableObject, getTextureID(1)).WillRepeatedly(Return(0));
+	EXPECT_CALL(batchableObject, getTextureID(2)).WillRepeatedly(Return(0));
+	EXPECT_CALL(batchableObject, getTextureID(3)).WillRepeatedly(Return(0));
 	
 	EXPECT_TRUE(catalogue.isMatch(&batchableObject, false));
 	Mock::VerifyAndClearExpectations(&atlas0);
