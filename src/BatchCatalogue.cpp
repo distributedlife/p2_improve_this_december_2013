@@ -48,16 +48,13 @@ bool BatchCatalogue::isMatch (const BatchableObject* object, const bool checkOnl
 
 bool BatchCatalogue::isEligible (const BatchableObject* object) 
 {
-	if (m_format == object->getDataFormat () && m_static == object->isStatic () && 
-		m_vShader == object->getVertexShader () && m_fShader == object->getFragmentShader () && 
-		m_indicies == object->hasIndicies ())
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	if (m_format != object->getDataFormat ()) { return false; }
+	if (m_static != object->isStatic ()) { return false; }
+	if (m_vShader != object->getVertexShader ()) { return false; } 
+	if (m_fShader != object->getFragmentShader ()) { return false; }
+	if (m_indicies != object->hasIndicies ()) { return false; }
+	
+	return true;
 }
 
 bool BatchCatalogue::willFit (const BatchableObject* object)
