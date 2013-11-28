@@ -27,4 +27,7 @@ public:
 	virtual const ShaderObject* getFragmentShader() const = 0;
 	virtual bool hasIndicies() const = 0;
 	virtual unsigned int getTextureID(int textureNumber) const = 0;
+	unsigned int getPrimaryTextureID() const {
+		return getTextureID(0);
+	}
 };

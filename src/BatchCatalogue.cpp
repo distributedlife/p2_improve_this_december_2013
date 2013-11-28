@@ -62,14 +62,14 @@ bool BatchCatalogue::isEligible (const BatchableObject* object)
 
 bool BatchCatalogue::willFit (const BatchableObject* object)
 {
-	if (catalogueContainsTexture(object->getTextureID(0)))
+	if (catalogueContainsTexture(object->getPrimaryTextureID()))
 	{
 		return true;
 	}
 
 	if (m_textureAtlas[0]) 
 	{
-		return m_textureAtlas[0]->willFit(object->getTextureID(0));
+		return m_textureAtlas[0]->willFit(object->getPrimaryTextureID());
 	}
 
 	return true;
@@ -81,7 +81,7 @@ bool BatchCatalogue::catalogueContainsTexture(unsigned int textureId)
 }
 
 void BatchCatalogue::addToCatalogue (const BatchableObject* object) {
-	if (catalogueContainsTexture(object->getTextureID(0)))
+	if (catalogueContainsTexture(object->getPrimaryTextureID()))
 	{
 		return;
 	}
@@ -103,7 +103,7 @@ void BatchCatalogue::addToCatalogue (const BatchableObject* object) {
 		addToTextureUnit(m_textureAtlas[3], object->getTextureID(3));
 	}
 
-	m_texturesAlreadyInCatalogue.push_back(object->getTextureID(0));
+	m_texturesAlreadyInCatalogue.push_back(object->getPrimaryTextureID());
 }
 
 void BatchCatalogue::addToTextureUnit(TextureManager::Atlas* textureUnit, unsigned int textureId)
